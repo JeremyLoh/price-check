@@ -1,0 +1,36 @@
+{
+  "name": "price-check",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JeremyLoh/price-check.git"
+  },
+  "author": "JeremyLoh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JeremyLoh/price-check/issues"
+  },
+  "homepage": "https://github.com/JeremyLoh/price-check#readme",
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.16.8",
+    "@babel/preset-env": "^7.16.8",
+    "babel-jest": "^27.4.6",
+    "jest": "^27.4.7"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "puppeteer": "^13.0.1"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    }
+  }
+}
