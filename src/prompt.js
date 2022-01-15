@@ -16,3 +16,27 @@ export async function isContinue() {
         return false
     }
 }
+
+export async function getSearchWebsite() {
+    const response = await prompts({
+        type: "multiselect",
+        min: 1,
+        name: "websites",
+        choices: [
+            { title: "Book Depository", value: "https://www.bookdepository.com/" },
+        ],
+        message: "Select a website to search",
+        hint: "- Space to select. Return to submit"
+    })
+    return response.websites
+}
+
+export async function getSearchTerm() {
+    const response = await prompts({
+        type: "text",
+        name: "term",
+        message: "What do you want to search for?",
+        validate: (input) => input.trim().length === 0 ? `Enter a valid search query` : true 
+    })
+    return response.term.trim()
+}
