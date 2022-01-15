@@ -1,5 +1,5 @@
 import axios from "axios"
-import {getIpAddress} from "./util"
+import {getIpAddress} from "./util.js"
 
 jest.mock("axios")
 
