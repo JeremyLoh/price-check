@@ -16,7 +16,8 @@ async function run() {
     const websites = await getSearchWebsite()
     const searchTerm = await getSearchTerm()
     const browserArgs = isUsingTor ? [`--proxy-server=socks5://127.0.0.1:${torPort}`] : []
-    await search(websites, searchTerm, browserArgs)
+    const foundProducts = await search(websites, searchTerm, browserArgs)
+    console.log("run --> foundProducts", foundProducts)
 }
 
 run()

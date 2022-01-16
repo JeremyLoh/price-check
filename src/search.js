@@ -12,48 +12,41 @@ puppeteer.use(AdblockerPlugin())
 
 export async function search(websites, searchTerm, browserArgs = []) {
     const browser = await getBrowser(browserArgs)
-    for (const website of websites) {
-        const products = await searchProducts(browser, website, searchTerm)
+    let foundProducts = []
+    for await (const website of websites) {
+        const products = (await searchProducts(browser, website, searchTerm))
+            .filter((product) => product.price !== "unavailable")
+        foundProducts = foundProducts.concat(products)
     }
-    // await browser.close()
+    await browser.close()
+    return foundProducts
 }
 
 export async function searchProducts(browser, website, searchTerm) {
     const selectors = getWebsiteSelectors(website)
     const websiteParser = getWebsiteParser(website)
     const page = await getNewPage(browser)
-    const cursor = createCursor(page)
     await page.goto(website, { waitUntil: 'networkidle2' })
+    await enterSearchTerm(page, selectors, searchTerm)
+    await page.waitForSelector(selectors.result.containers)
+    const productContainers = await page.$$(selectors.result.containers)
+    const productFieldPromises = productContainers.map(async (element) => 
+        await getParsedProductFields(element, selectors, websiteParser))
+    const products = await Promise.all(productFieldPromises)
+    page.close()
+    return products
+}
+
+async function enterSearchTerm(page, selectors, searchTerm) {
+    const cursor = createCursor(page)
     await page.waitForSelector(selectors.search.textField)
     await cursor.click(selectors.search.textField)
-
     await page.keyboard.type(searchTerm, { delay: getRandomRange(150, 200) })
     await Promise.all([
         page.waitForNavigation({ waitUntil: "networkidle0" }),
         page.keyboard.press("Enter", { delay: getRandomRange(0, 10) })
     ])
-    
-    await page.waitForSelector(selectors.result.containers)
-    const productContainers = await page.$$(selectors.result.containers)
-    const productFieldPromises = productContainers.map(async (element) => {
-        const {
-            price: priceSelector,
-            productPageUrl: productPageSelector,
-            title: titleSelector
-        } = selectors.result
-        return {
-            price: await getProductPrice(element, priceSelector, websiteParser.price),
-            productPageUrl: await getProductPageUrl(element, productPageSelector, websiteParser.productPageUrl,
-                selectors.productPageUrlPrepend),
-            title: await getProductTitle(element, titleSelector, websiteParser.title)
-        }
-    })
-    const products = await Promise.all(productFieldPromises)
-    // TODO remove log
-    console.log(products)
-    page.close()
-    return products
-}
+} 
 
 export async function getBrowser(browserArgs) {
     const browser = await puppeteer.launch({
@@ -70,20 +63,33 @@ async function getNewPage(browser) {
     return page
 }
 
-async function getProductPrice(element, selector, parser) {
-    await element.waitForSelector(selector)
-    const price = await element.$eval(selector, (el) => el.textContent.trim())
-    return parser(price)
+async function getParsedProductFields(element, selectors, websiteParser) {
+    const {
+        price: priceSelector,
+        productPageUrl: productPageSelector,
+        title: titleSelector
+    } = selectors.result
+    return {
+        price: websiteParser.price(await getProductPrice(element, priceSelector)),
+        productPageUrl: websiteParser.productPageUrl(
+            await getProductPageUrl(element, productPageSelector),
+            selectors.productPageUrlPrepend
+        ),
+        title: websiteParser.title(await getProductTitle(element, titleSelector))
+    }
 }
 
-async function getProductPageUrl(element, selector, parser, productPageUrlPrepend) {
+async function getProductPrice(element, selector) {
     await element.waitForSelector(selector)
-    const productPageUrl = await element.$eval(selector, (el) => el.getAttribute("href"))
-    return parser(productPageUrl, productPageUrlPrepend)
+    return await element.$eval(selector, (el) => el.textContent.trim())
 }
 
-async function getProductTitle(element, selector, parser) {
+async function getProductPageUrl(element, selector) {
     await element.waitForSelector(selector)
-    const title = await element.$eval(selector, (el) => el.textContent.trim())
-    return parser(title)
+    return await element.$eval(selector, (el) => el.getAttribute("href"))
+}
+
+async function getProductTitle(element, selector) {
+    await element.waitForSelector(selector)
+    return await element.$eval(selector, (el) => el.textContent.trim())
 }
