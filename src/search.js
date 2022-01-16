@@ -18,7 +18,7 @@ export async function search(websites, searchTerm, browserArgs = []) {
             .filter((product) => product.price !== "unavailable")
         foundProducts = foundProducts.concat(products)
     }
-    await browser.close()
+    // await browser.close()
     return foundProducts
 }
 
@@ -33,7 +33,8 @@ export async function searchProducts(browser, website, searchTerm) {
     const productFieldPromises = productContainers.map(async (element) => 
         await getParsedProductFields(element, selectors, websiteParser))
     const products = await Promise.all(productFieldPromises)
-    page.close()
+    console.log("products", products)
+    // page.close()
     return products
 }
 
@@ -70,12 +71,12 @@ async function getParsedProductFields(element, selectors, websiteParser) {
         title: titleSelector
     } = selectors.result
     return {
+        title: websiteParser.title(await getProductTitle(element, titleSelector)),
         price: websiteParser.price(await getProductPrice(element, priceSelector)),
         productPageUrl: websiteParser.productPageUrl(
             await getProductPageUrl(element, productPageSelector),
             selectors.productPageUrlPrepend
-        ),
-        title: websiteParser.title(await getProductTitle(element, titleSelector))
+        )
     }
 }
 

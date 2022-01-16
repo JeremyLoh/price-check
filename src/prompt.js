@@ -1,5 +1,5 @@
 import prompts from "prompts"
-import { BOOK_DEPOSITORY_WEBSITE } from "./constant.js"
+import { BOOK_DEPOSITORY_WEBSITE, LAZADA_SG_WEBSITE } from "./constant.js"
 import {getIpAddress} from "./util.js"
 
 export async function isContinue() {
@@ -25,6 +25,7 @@ export async function getSearchWebsite() {
         name: "websites",
         choices: [
             { title: "Book Depository", value: BOOK_DEPOSITORY_WEBSITE },
+            { title: "Lazada Singapore", value: LAZADA_SG_WEBSITE },
         ],
         message: "Select a website to search",
         hint: "- Space to select. Return to submit"

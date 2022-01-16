@@ -1,4 +1,4 @@
-import { BOOK_DEPOSITORY_WEBSITE } from "./constant.js"
+import { BOOK_DEPOSITORY_WEBSITE, LAZADA_SG_WEBSITE } from "./constant.js"
 
 const SELECTORS = new Map([
     [
@@ -16,6 +16,21 @@ const SELECTORS = new Map([
             productPageUrlPrepend: "https://www.bookdepository.com"
         }
     ],
+    [
+        LAZADA_SG_WEBSITE,
+        {
+            search: {
+                textField: "input[type='search']"
+            },
+            result: {
+                containers: "div[data-tracking='product-card']",
+                price: "div:nth-child(1) div span",
+                productPageUrl: "a[title]",
+                title: "a[title]",
+            },
+            productPageUrlPrepend: "https:"
+        }
+    ]
 ])
 
 export function getWebsiteSelectors(website) {
