@@ -1,8 +1,16 @@
 # price-check
 
+This program allows you to compare prices for a search term between different websites.
+
 Before launching the program, ensure that you are either connected to a VPN or have Tor running with an open SOCK port (default of 9050).
 
 If you would like to use Tor, the format for the proxy is assumed to be `socks5://127.0.0.1:9050`. You can change the port number from `9050` to something else by following the program prompts. 
+
+Download the repository and ensure that you have Node.js installed.
+
+Navigate to the cloned repository and Run `npm install` on the command line. This will install the required dependencies in the `node_modules` folder.  
+
+Run `npm start` on the command line to start the application.
 
 ## Configuring Tor (to change Ip address) (Linux)
 
