@@ -37,4 +37,3 @@ To apply the new changes, we need to restart the Tor client
 - puppeteer-extra - https://www.npmjs.com/package/puppeteer-extra
 - Anonymous Web Scraping with Node.js, Tor, Puppeteer and cheerio by
 George Gkasdrogkas - https://levelup.gitconnected.com/anonymous-web-scrapping-with-node-js-tor-apify-and-cheerio-3b36ec6a45dc
-- waitForSelector seems to follow the CSS selector list rules. So essentially you can select multiple CSS elements by just using a comma https://stackoverflow.com/a/64451797
