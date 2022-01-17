@@ -1,10 +1,12 @@
 import { BOOK_DEPOSITORY_WEBSITE, LAZADA_SG_WEBSITE } from "./constant.js"
 
+const nbspRegex = /\s{4}/
+
 const PARSER = new Map([
     [
         BOOK_DEPOSITORY_WEBSITE,
         {
-            price: (price) => price.split(/\s+/)[0],
+            price: (price) => price.split(nbspRegex)[0],
             productPageUrl: (productPageUrl, productPageUrlPrepend) => `${productPageUrlPrepend}${productPageUrl}`,
             title: (title) => title
         }
