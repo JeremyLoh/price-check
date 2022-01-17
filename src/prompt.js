@@ -61,3 +61,13 @@ export async function getTorProxy() {
     ]
     return await prompts(questions)
 }
+
+export async function getOutputFileName() {
+    const response = await prompts({
+        type: "text",
+        name: "fileName",
+        message: "What is your output file name?",
+        validate: (input) => input.trim().length === 0 ? `Enter a valid file name` : true 
+    })
+    return response.fileName
+}
