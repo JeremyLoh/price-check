@@ -1,3 +1,4 @@
+import filenamify from "filenamify"
 import prompts from "prompts"
 import { BOOK_DEPOSITORY_WEBSITE, LAZADA_SG_WEBSITE } from "./constant.js"
 import {getIpAddress} from "./util.js"
@@ -69,5 +70,5 @@ export async function getOutputFileName() {
         message: "What is your output file name?",
         validate: (input) => input.trim().length === 0 ? `Enter a valid file name` : true 
     })
-    return response.fileName
+    return filenamify(response.fileName, {replacement: ""})
 }
